@@ -23,8 +23,8 @@ int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCod
             new(OpCodes.Callvirt, PropertyGetter(typeof(ChangingGroupEventArgs), nameof(ChangingGroupEventArgs.IsAllowed))),
             new(OpCodes.Brfalse_S, printLabel), //We are jumping to our print label
             new CodeInstruction(OpCodes.Ldarg_0).WithLabels(printLabel), //This is where we marked our print label to be 
-            new(OpCodes.Ldstr, "ChangingGroupEvent was not allowed"), //Our string we need added to the EStack
-            new(OpCodes.Call, Method(typeof(API.Features.Log), nameof(API.Features.Log.Info))), //Our call to the method utilizing the EStack string
+			new CodeInstruction(OpCodes.Ldstr, "ChangingGroupEvent"), //Our string we need added to the EStack
+			new CodeInstruction(OpCodes.Call, Method(typeof(Log), nameof(Log.Info), new[] { typeof(string)})), //Our call to the method utilizing the EStack string
             new(OpCodes.Jmp, returnLabel), //Our immediate call to the return label
 });
 newInstructions[newInstructions.Count - 1].labels.Add(returnLabel);
