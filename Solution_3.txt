@@ -1,0 +1,1 @@
+new CodeInstruction(OpCodes.Call, Method(typeof(Customitem), nameof(Customitem.TryGet), new[] { typeof(Player), typeof(CustomItem).MakeByRefType() })),
