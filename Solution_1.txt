@@ -1,0 +1,8 @@
+The best option:
+
+int offset = 0;
+int index = newInstructions.FindIndex(instruction => instruction.LoadsField(Field(typeof(Scp244DeployablePickup), nameof(Scp244DeployablePickup._visibleModel)))) + offset;
+
+An OK option:
+int offset = -1;
+int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldc_I4_0) + offset;

@@ -1,0 +1,15 @@
+The best option:
+
+Use the previous index and search from there
+
+int activeOffset = 0;
+int activeIndex = newInstructions.FindIndex(index, instruction => instruction.Calls(Method(typeof(Mirror.NetworkServer), nameof(Mirror.NetworkServer.active)))) + offset;
+
+The second best (Because you have to search from the beginning):
+
+int activeOffset = 0;
+int activeIndex = newInstructions.FindIndex(instruction => instruction.Calls(Method(typeof(Mirror.NetworkServer), nameof(Mirror.NetworkServer.active)))) + offset;
+
+An OK option:
+int offset = -1;
+int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Brtrue_S) + offset;

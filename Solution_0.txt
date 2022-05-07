@@ -1,6 +1,6 @@
 List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 Label returnLabel = generator.DefineLabel();
-Label printLabel = generator.DefineLabel(); //Our new label to work with 
+Label continueProcessing = generator.DefineLabel(); //Our new label to work with 
 int offset = 1;
 int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ret) + offset;
 // var ev = new ChangingGroupEventArgs(Player, UserGroup, true);
@@ -21,11 +21,12 @@ int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCod
             new(OpCodes.Dup),
             new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnChangingGroup))),
             new(OpCodes.Callvirt, PropertyGetter(typeof(ChangingGroupEventArgs), nameof(ChangingGroupEventArgs.IsAllowed))),
-            new(OpCodes.Brfalse_S, printLabel), //We are jumping to our print label
-            new CodeInstruction(OpCodes.Ldarg_0).WithLabels(printLabel), //This is where we marked our print label to be 
-			new CodeInstruction(OpCodes.Ldstr, "ChangingGroupEvent"), //Our string we need added to the EStack
-			new CodeInstruction(OpCodes.Call, Method(typeof(Log), nameof(Log.Info), new[] { typeof(string)})), //Our call to the method utilizing the EStack string
-            new(OpCodes.Jmp, returnLabel), //Our immediate call to the return label
+            new(OpCodes.Brtrue_S, continueProcessing), //We are jumping to our conntinue label
+            new(OpCodes.Ldarg_0), //This is where we marked our false condition to start
+            new(OpCodes.Ldstr, "ChangingGroupEvent"), //Our string we need added to the EStack
+            new(OpCodes.Call, Method(typeof(Log), nameof(Log.Info), new[] { typeof(string)})), //Our call to the method utilizing the EStack string
+            new(OpCodes.Br, returnLabel), //Our immediate call to the return label
+            new(OpCodes.Nop).WithLabels(continueProcessing), // This is the simpliest way, the best way is to add a label to the next instruction
 });
 newInstructions[newInstructions.Count - 1].labels.Add(returnLabel);
 for (int z = 0; z < newInstructions.Count; z++)
